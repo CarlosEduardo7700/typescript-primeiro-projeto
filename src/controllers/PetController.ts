@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import type TypePet from "../types/TypePet";
+import EnumEspecie from "../enum/EnumEspecie";
 
 let listaDePets: TypePet[] = [];
 // let listaDePets: Array<TypePet> = [];
@@ -9,6 +10,10 @@ export default class PetController {
     criaPet (req:Request, res:Response) {
         // const { id, adotado, especie, idade, nome } = <TypePet> req.body;
         const { id, adotado, especie, idade, nome } = req.body as TypePet;
+
+        if (!Object.values(EnumEspecie).includes(especie)) {
+            return res.status(400).json({ error: "Espécie inválida!" })
+        }
 
         const novoPet: TypePet = { id, adotado, especie, idade, nome }
 
