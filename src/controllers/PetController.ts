@@ -5,17 +5,23 @@ import EnumEspecie from "../enum/EnumEspecie";
 let listaDePets: TypePet[] = [];
 // let listaDePets: Array<TypePet> = [];
 
+let id = 0;
+function geraId() {
+  id = id + 1;
+  return id;
+}
+
 export default class PetController {
 
     criaPet (req:Request, res:Response) {
-        // const { id, adotado, especie, idade, nome } = <TypePet> req.body;
-        const { id, adotado, especie, idade, nome } = req.body as TypePet;
+        // const { adotado, especie, idade, nome } = <TypePet> req.body;
+        const { adotado, especie, dataDeNascimento, nome } = req.body as TypePet;
 
         if (!Object.values(EnumEspecie).includes(especie)) {
             return res.status(400).json({ error: "Espécie inválida!" })
         }
 
-        const novoPet: TypePet = { id, adotado, especie, idade, nome }
+        const novoPet: TypePet = { id: geraId(), adotado, especie, dataDeNascimento, nome }
 
         listaDePets.push(novoPet);
         
@@ -28,7 +34,7 @@ export default class PetController {
 
     atualizaPet (req: Request, res: Response) {
         const { id } = req.params;
-        const { adotado, especie, idade, nome} = req.body as TypePet;
+        const { adotado, especie, dataDeNascimento, nome} = req.body as TypePet;
         const pet = listaDePets.find((pet) => pet.id === Number(id));
 
         if (!pet) { 
@@ -36,7 +42,7 @@ export default class PetController {
         }
 
         pet.nome = nome;
-        pet.idade = idade;
+        pet.dataDeNascimento = dataDeNascimento;
         pet.especie = especie;
         pet.adotado = adotado;
 
