@@ -19,7 +19,7 @@ export default class PetController {
 
     }
 
-    criaPet (req:Request, res:Response) {
+    async criaPet (req:Request, res:Response) {
         // const { adotado, especie, idade, nome } = <TypePet> req.body;
         const { adotado, especie, dataDeNascimento, nome } = req.body as PetEntity;
 
@@ -27,15 +27,9 @@ export default class PetController {
             return res.status(400).json({ error: "Espécie inválida!" })
         }
 
-        const novoPet = new PetEntity()
-        
-        novoPet.id = geraId(), 
-        novoPet.adotado = adotado, 
-        novoPet.especie = especie, 
-        novoPet.dataDeNascimento = dataDeNascimento, 
-        novoPet.nome = nome
+        const novoPet = new PetEntity(nome, especie, dataDeNascimento, adotado)
 
-        this.repository.criaPet(novoPet)
+        await this.repository.criaPet(novoPet)
         
         return res.status(201).json(novoPet);
     }
