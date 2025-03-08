@@ -17,4 +17,9 @@ export default interface IPetRepository {
 
     buscaPetPeloPorte(porte: EnumPorte): Promise<PetEntity[]> | PetEntity[]
 
+    buscaPetPorCampoGenerico<Tipo extends keyof PetEntity> (
+        campo: Tipo,
+        valor: PetEntity[Tipo]
+    ): Promise<PetEntity[]> | PetEntity[]
+
 }

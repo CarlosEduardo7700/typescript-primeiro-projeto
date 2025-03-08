@@ -125,4 +125,14 @@ export default class PetRepository implements IPetRepository {
         return pets
     }
 
+    async buscaPetPorCampoGenerico<Tipo extends keyof PetEntity>(campo: Tipo, valor: PetEntity[Tipo]): Promise<PetEntity[]> {
+        const pets = await this.repository.find({
+            where: {
+                [campo]: valor
+            }
+        })
+
+        return pets
+    }
+
 }
