@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import AdotanteRepository from "../repositories/AdotanteRepository";
 import AdotanteEntity from "../entities/AdotanteEntity";
 import EnderecoEntity from "../entities/EnderecoEntity";
+import { TypeRequestBodyAdotante, TypeResponseBodyAdotante } from "../types/typesAdotantes";
 
 export default class AdotanteController {
 
@@ -9,7 +10,10 @@ export default class AdotanteController {
 
     }
 
-    async criaAdotante (req:Request, res:Response) {
+    async criaAdotante (
+        req:Request<{}, {}, TypeRequestBodyAdotante>, 
+        res:Response<TypeResponseBodyAdotante>
+    ) {
         try {
             const { nome, celular, endereco, foto, senha } = req.body as AdotanteEntity;
 
@@ -17,9 +21,9 @@ export default class AdotanteController {
 
             await this.repository.criaAdotante(novoAdotante)
             
-            return res.status(201).json(novoAdotante);
+            return res.status(201).json({ data: { id: novoAdotante.id, nome, celular } });
         } catch (error) {
-            return res.status(400).json({ message: "Erro ao cadastrar!" });
+            return res.status(400).json({ error: "Erro ao cadastrar!" });
         }
         
     }
