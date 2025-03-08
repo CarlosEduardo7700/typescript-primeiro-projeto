@@ -1,12 +1,18 @@
 import { Repository } from "typeorm";
 import PetEntity from "../entities/PetEntity";
 import IPetRepository from "./interfaces/IPetRepository";
+import AdotanteEntity from "../entities/AdotanteEntity";
 
 export default class PetRepository implements IPetRepository {
     private repository: Repository<PetEntity>
+    private adotanteRepository: Repository<AdotanteEntity>
 
-    constructor(repository: Repository<PetEntity>) {
+    constructor(
+        repository: Repository<PetEntity>,
+        adotanteRepository: Repository<AdotanteEntity>
+    ) {
         this.repository = repository
+        this.adotanteRepository = adotanteRepository
     }
 
     criaPet(pet: PetEntity): void {
@@ -69,6 +75,43 @@ export default class PetRepository implements IPetRepository {
                 message: "Erro ao tentar deletar!"
             }
         }
+    }
+
+    async adotaPet(
+        idPet: number,
+        idAdotante: number
+    ): Promise<{ success: boolean; message?: string }> {
+        const pet = await this.repository.findOne({
+            where: {
+                id: idPet
+            }
+        })
+
+        if (!pet) {
+            return {
+                success: false,
+                message: "Pet não encontrado!"
+            }
+        }
+
+        const adotante = await this.adotanteRepository.findOne({
+            where: {
+                id: idAdotante
+            }
+        })
+
+        if (!adotante) {
+            return {
+                success: false, 
+                message: "Adotante não encontrado!"
+            }
+        }
+
+        pet.adotante = adotante
+        pet.adotado = true
+        await this.repository.save(pet)
+
+        return {success: true}
     }
 
 }

@@ -68,4 +68,19 @@ export default class PetController {
 
         return res.status(200).json({ mensagem: "Pet deletado com sucesso!" });
     }
+
+    async adotaPet (req: Request, res: Response) {
+        const { idPet, idAdotante } = req.params;
+
+        const { success, message } = await this.repository.adotaPet(
+            Number(idPet),
+            Number(idAdotante)
+        )
+
+        if (!success) {
+            return res.status(404).json({ message }); 
+        }
+
+        return res.status(200).json({ mensagem: "Pet adotado com sucesso!" });
+    }
 }
