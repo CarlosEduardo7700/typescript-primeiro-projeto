@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import AdotanteRepository from "../repositories/AdotanteRepository";
 import AdotanteEntity from "../entities/AdotanteEntity";
 import EnderecoEntity from "../entities/EnderecoEntity";
-import { TypeRequestBodyAdotante, TypeResponseBodyAdotante } from "../types/typesAdotantes";
+import { TypeRequestBodyAdotante, TypeRequestParamsAdotante, TypeResponseBodyAdotante } from "../types/typesAdotantes";
 
 export default class AdotanteController {
 
@@ -11,7 +11,7 @@ export default class AdotanteController {
     }
 
     async criaAdotante (
-        req:Request<{}, {}, TypeRequestBodyAdotante>, 
+        req:Request<TypeRequestParamsAdotante, {}, TypeRequestBodyAdotante>, 
         res:Response<TypeResponseBodyAdotante>
     ) {
         try {
@@ -28,12 +28,25 @@ export default class AdotanteController {
         
     }
 
-    async listaAdotantes(req: Request, res: Response) {
+    async listaAdotantes(
+        req:Request<TypeRequestParamsAdotante, {}, TypeRequestBodyAdotante>, 
+        res:Response<TypeResponseBodyAdotante>
+    ) {
         const listaDeAdotantes = await this.repository.listaAdotantes();
-        return res.json(listaDeAdotantes);
+        const data = listaDeAdotantes.map((adotante) => {
+            return {
+                id: adotante.id,
+                nome: adotante.nome,
+                celular: adotante.celular
+            }
+        })
+        return res.json({data});
     }
     
-    async atualizaAdotante(req: Request, res: Response) {
+    async atualizaAdotante(
+        req:Request<TypeRequestParamsAdotante, {}, TypeRequestBodyAdotante>, 
+        res:Response<TypeResponseBodyAdotante>
+    ) {
         const { id } = req.params;
 
         const { success, message } = await this.repository.atualizaAdotante(
@@ -42,13 +55,16 @@ export default class AdotanteController {
         );
 
         if (!success) {
-            return res.status(404).json({ message });
+            return res.status(404).json({ error: message });
         }
 
         return res.sendStatus(204);
     }
 
-    async deletaAdotante(req: Request, res: Response) {
+    async deletaAdotante(
+        req:Request<TypeRequestParamsAdotante, {}, TypeRequestBodyAdotante>, 
+        res:Response<TypeResponseBodyAdotante>
+    ) {
         const { id } = req.params;
 
         const { success, message } = await this.repository.deletaAdotante(
@@ -56,22 +72,25 @@ export default class AdotanteController {
         );
 
         if (!success) {
-            return res.status(404).json({ message });
+            return res.status(404).json({ error: message });
         }
         
         return res.sendStatus(204);
     }
 
-    async atualizaEnderecoAdotante(req: Request, res: Response) {
+    async atualizaEnderecoAdotante(
+        req:Request<TypeRequestParamsAdotante, {}, TypeRequestBodyAdotante>, 
+        res:Response<TypeResponseBodyAdotante>
+    ) {
         const { id } = req.params;
 
         const { success, message } = await this.repository.atualizaEnderecoDoAdotante(
             Number(id),
-            req.body as EnderecoEntity
+            req.body.endereco as EnderecoEntity
         );
 
         if (!success) {
-            return res.status(404).json({ message });
+            return res.status(404).json({ error: message });
         }
         
         return res.sendStatus(204);
