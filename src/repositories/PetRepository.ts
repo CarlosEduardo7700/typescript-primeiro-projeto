@@ -2,6 +2,7 @@ import { Repository } from "typeorm";
 import PetEntity from "../entities/PetEntity";
 import IPetRepository from "./interfaces/IPetRepository";
 import AdotanteEntity from "../entities/AdotanteEntity";
+import EnumPorte from "../enum/EnumPorte";
 
 export default class PetRepository implements IPetRepository {
     private repository: Repository<PetEntity>
@@ -112,6 +113,16 @@ export default class PetRepository implements IPetRepository {
         await this.repository.save(pet)
 
         return {success: true}
+    }
+
+    async buscaPetPeloPorte(porte: EnumPorte): Promise<PetEntity[]>  {
+        const pets = await this.repository.find({
+            where: {
+                porte
+            }
+        })
+
+        return pets
     }
 
 }

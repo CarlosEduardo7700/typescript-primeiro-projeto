@@ -88,4 +88,12 @@ export default class PetController {
 
         return res.status(200).json({ mensagem: "Pet adotado com sucesso!" });
     }
+
+    async buscaPetPeloPorte(req: Request, res: Response) {
+        const { porte } = req.query
+
+        const listaDePets = await this.repository.buscaPetPeloPorte(porte as EnumPorte)
+
+        return res.status(200).json(listaDePets)
+    }
 }

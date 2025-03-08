@@ -17,5 +17,6 @@ router.get('/', (req, res) => {petController.listaPets(req, res)})
 router.put('/:id', (req, res) => {petController.atualizaPet(req, res)})
 router.delete('/:id', (req, res) => {petController.deletaPet(req, res)})
 router.put('/:idPet/:idAdotante', (req, res) => {petController.adotaPet(req, res)})
+router.get('/filtro-por-porte', (req, res) => {petController.buscaPetPeloPorte(req, res)})
 
 export default router
