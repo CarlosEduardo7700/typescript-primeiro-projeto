@@ -28,11 +28,21 @@ export default class AdotanteController {
             let bodyValidated: TypeRequestBodyAdotante
 
             try {
-                bodyValidated = await adotanteBodyValidator.validate(req.body)
+                bodyValidated = await adotanteBodyValidator.validate(req.body, {
+                    abortEarly: false
+                })
             } catch (error) {
                 const yupErrors = error as yup.ValidationError
-                return res.status(400).json({ error: yupErrors.message })
-                
+
+                const validationErros: Record<string, string> = {}
+
+                yupErrors.inner.forEach((error) => {
+                    if (!error.path) return
+
+                    validationErros[error.path] = error.message
+                })
+
+                return res.status(400).json({ error: validationErros })
             }
 
             const novoAdotante = new AdotanteEntity(nome, senha, celular, foto, endereco)
