@@ -18,15 +18,13 @@ export default class AdotanteController {
         res:Response<TypeResponseBodyAdotante>
     ) {
         try {
-            const { nome, celular, endereco, foto, senha } = req.body as AdotanteEntity;
-
-            let bodyValidated: TypeRequestBodyAdotante          
+            const { nome, celular, endereco, foto, senha } = req.body as AdotanteEntity;        
 
             const novoAdotante = new AdotanteEntity(nome, senha, celular, foto, endereco)
 
             await this.repository.criaAdotante(novoAdotante)
             
-            return res.status(201).json({ data: { id: novoAdotante.id, nome, celular } });
+            return res.status(201).json({ data: { id: novoAdotante.id, nome, celular, endereco } });
         } catch (error) {
             return res.status(400).json({ error: "Erro ao cadastrar!" });
         }
@@ -42,7 +40,8 @@ export default class AdotanteController {
             return {
                 id: adotante.id,
                 nome: adotante.nome,
-                celular: adotante.celular
+                celular: adotante.celular,
+                endereco: adotante.endereco !== null ? adotante.endereco : undefined
             }
         })
         return res.json({data});
@@ -84,14 +83,14 @@ export default class AdotanteController {
     }
 
     async atualizaEnderecoAdotante(
-        req:Request<TypeRequestParamsAdotante, {}, TypeRequestBodyAdotante>, 
+        req:Request<TypeRequestParamsAdotante, {}, EnderecoEntity>, 
         res:Response<TypeResponseBodyAdotante>
     ) {
         const { id } = req.params;
 
         const { success, message } = await this.repository.atualizaEnderecoDoAdotante(
             Number(id),
-            req.body.endereco as EnderecoEntity
+            req.body
         );
 
         if (!success) {
