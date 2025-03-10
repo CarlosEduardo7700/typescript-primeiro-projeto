@@ -18,14 +18,6 @@ export default class PetController {
         // const { adotado, especie, idade, nome } = <TypePet> req.body;
         const { adotado, especie, dataDeNascimento, nome, porte } = req.body as PetEntity;
 
-        if (!Object.values(EnumEspecie).includes(especie)) {
-            return res.status(400).json({ erros: "Espécie inválida!" })
-        }
-
-        if (porte && !(porte in EnumPorte)) {
-            return res.status(400).json({ erros: "Porte inválido!" })
-        }
-
         const novoPet = new PetEntity(nome, especie, dataDeNascimento, adotado, porte)
 
         await this.repository.criaPet(novoPet)
@@ -43,7 +35,7 @@ export default class PetController {
             return {
                 id: pet.id,
                 nome: pet.nome,
-                porte: pet.porte,
+                porte: pet.porte !== null ? pet.porte : undefined,
                 especie: pet.especie
             }
         })
