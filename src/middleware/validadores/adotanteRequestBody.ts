@@ -1,6 +1,9 @@
 import { NextFunction, Request, Response } from "express";
-import * as yup from "yup"
 import { TypeRequestBodyAdotante } from "../../types/typesAdotantes";
+import * as yup from "yup"
+import { pt } from "yup-locale-pt"
+
+yup.setLocale(pt)
 
 const squemaBodyAdotante: yup.ObjectSchema<Omit<TypeRequestBodyAdotante, "endereco">> = yup.object({
     nome: yup.string().defined().required(),
