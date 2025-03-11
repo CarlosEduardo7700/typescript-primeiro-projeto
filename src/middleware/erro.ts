@@ -8,7 +8,6 @@ export const erroMiddleware = (
     res: Response, 
     next: NextFunction
 ) => {
-    console.log(erro)
 
     const statusCode = erro.statusCode ?? EnumHttpStatusCode.INTERNAL_SERVER_ERROR
 

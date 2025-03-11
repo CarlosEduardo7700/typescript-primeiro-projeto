@@ -3,6 +3,7 @@ import PetEntity from "../entities/PetEntity";
 import IPetRepository from "./interfaces/IPetRepository";
 import AdotanteEntity from "../entities/AdotanteEntity";
 import EnumPorte from "../enum/EnumPorte";
+import { NaoEncontrado } from "../utils/manipulaErros";
 
 export default class PetRepository implements IPetRepository {
     private repository: Repository<PetEntity>
@@ -25,57 +26,37 @@ export default class PetRepository implements IPetRepository {
     }
 
     async atualizarPet(id: number, pet: PetEntity): Promise<{ success: boolean; message?: string }> {
-        try {
-            const petToUpdate = await this.repository.findOne({
-                where: {
-                    id
-                }
-            })
-
-            if (!petToUpdate) {
-                return {
-                    success: false,
-                    message: "Pet não encontrado!"
-                }
+        const petToUpdate = await this.repository.findOne({
+            where: {
+                id
             }
+        })
 
-            Object.assign(petToUpdate, pet)
-
-            await this.repository.save(petToUpdate)
-
-            return { success: true }
-        } catch (error) {
-            return {
-                success: false,
-                message: "Erro ao tentar atualizar!"
-            }
+        if (!petToUpdate) {
+            throw new NaoEncontrado("Pet não encontrado!")
         }
+
+        Object.assign(petToUpdate, pet)
+
+        await this.repository.save(petToUpdate)
+
+        return { success: true }
     }
 
     async deletarPet(id: number): Promise<{ success: boolean; message?: string }> {
-        try {
-            const petToDelete = await this.repository.findOne({
-                where: {
-                    id
-                }
-            })
-
-            if (!petToDelete) {
-                return {
-                    success: false,
-                    message: "Pet não encontrado!"
-                }
+        const petToDelete = await this.repository.findOne({
+            where: {
+                id
             }
+        })
 
-            await this.repository.remove(petToDelete)
-
-            return { success: true }
-        } catch (error) {
-            return {
-                success: false,
-                message: "Erro ao tentar deletar!"
-            }
+        if (!petToDelete) {
+            throw new NaoEncontrado("Pet não encontrado!")
         }
+
+        await this.repository.remove(petToDelete)
+
+        return { success: true }
     }
 
     async adotaPet(
@@ -89,10 +70,7 @@ export default class PetRepository implements IPetRepository {
         })
 
         if (!pet) {
-            return {
-                success: false,
-                message: "Pet não encontrado!"
-            }
+            throw new NaoEncontrado("Pet não encontrado!")
         }
 
         const adotante = await this.adotanteRepository.findOne({
@@ -102,10 +80,8 @@ export default class PetRepository implements IPetRepository {
         })
 
         if (!adotante) {
-            return {
-                success: false, 
-                message: "Adotante não encontrado!"
-            }
+            throw new NaoEncontrado("Adotante não encontrado!")
+
         }
 
         pet.adotante = adotante

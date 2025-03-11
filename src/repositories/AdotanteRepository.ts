@@ -2,6 +2,7 @@ import { Repository } from "typeorm";
 import IAdotanteRepository from "./interfaces/IAdotanteRepository";
 import AdotanteEntity from "../entities/AdotanteEntity";
 import EnderecoEntity from "../entities/EnderecoEntity";
+import { NaoEncontrado } from "../utils/manipulaErros";
 
 export default class AdotanteRepository implements IAdotanteRepository {
     private repository: Repository<AdotanteEntity>
@@ -22,57 +23,39 @@ export default class AdotanteRepository implements IAdotanteRepository {
         id: number, 
         adotante: AdotanteEntity
     ): Promise<{ success: boolean; message?: string; }> {
-        try {
-            const adotanteToUpdate = await this.repository.findOne({
-                where: {
-                    id
-                }
-            })
-
-            if (!adotanteToUpdate) {
-                return { success: false, message: "Adotante não encontrado!" }
+        const adotanteToUpdate = await this.repository.findOne({
+            where: {
+                id
             }
+        })
 
-            Object.assign(adotanteToUpdate, adotante);
-
-            await this.repository.save(adotanteToUpdate);
-
-            return { success: true };
-            
-        } catch (error) {
-            console.log(error);
-
-            return {
-                success: false,
-                message: "Ocorreu um erro ao tentar atualizar o adotante.",
-            };
+        if (!adotanteToUpdate) {
+            throw new NaoEncontrado("Adotante não encontrado!")
         }
+
+        Object.assign(adotanteToUpdate, adotante);
+
+        await this.repository.save(adotanteToUpdate);
+
+        return { success: true };
     }
 
     async deletaAdotante(
         id: number
     ): Promise<{ success: boolean; message?: string }> {
-        try {
-            const adotanteToRemove = await this.repository.findOne({ 
-                where: { 
-                    id 
-                } 
-            });
+        const adotanteToRemove = await this.repository.findOne({ 
+            where: { 
+                id 
+            } 
+        });
 
-            if (!adotanteToRemove) {
-            return { success: false, message: "Adotante não encontrado!" };
-            }
-
-            await this.repository.remove(adotanteToRemove);
-
-            return { success: true };
-        } catch (error) {
-
-            return {
-                success: false,
-                message: "Ocorreu um erro ao tentar excluir o adotante.",
-            };
+        if (!adotanteToRemove) {
+            throw new NaoEncontrado("Adotante não encontrado!")
         }
+
+        await this.repository.remove(adotanteToRemove);
+
+        return { success: true };
     }
 
     async atualizaEnderecoDoAdotante(
@@ -86,10 +69,7 @@ export default class AdotanteRepository implements IAdotanteRepository {
         })
 
         if(!adotante) {
-            return {
-                success: false,
-                message: "Adotante não encontrado!"
-            }
+            throw new NaoEncontrado("Adotante não encontrado!")
         }
 
         const novoEndereco = new EnderecoEntity(endereco.cidade, endereco.estado)
