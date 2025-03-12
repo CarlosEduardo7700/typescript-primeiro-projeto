@@ -15,18 +15,13 @@ export default class AdotanteController {
         req:Request<TypeRequestParamsAdotante, {}, TypeRequestBodyAdotante>, 
         res:Response<TypeResponseBodyAdotante>
     ) {
-        try {
-            const { nome, celular, endereco, foto, senha } = req.body as AdotanteEntity;        
+        const { nome, celular, endereco, foto, senha } = req.body as AdotanteEntity;        
 
-            const novoAdotante = new AdotanteEntity(nome, senha, celular, foto, endereco)
+        const novoAdotante = new AdotanteEntity(nome, senha, celular, foto, endereco)
 
-            await this.repository.criaAdotante(novoAdotante)
-            
-            return res.status(201).json({ dados: { id: novoAdotante.id, nome, celular, endereco } });
-        } catch (error) {
-            return res.status(400).json({ erros: "Erro ao cadastrar!" });
-        }
+        await this.repository.criaAdotante(novoAdotante)
         
+        return res.status(201).json({ dados: { id: novoAdotante.id, nome, celular, endereco } });  
     }
 
     async listaAdotantes(

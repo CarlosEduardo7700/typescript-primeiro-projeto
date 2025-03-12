@@ -15,7 +15,7 @@ export default class AdotanteEntity {
     @Column()
     senha: string
 
-    @Column()
+    @Column({unique:true})
     celular: string
 
     @Column({nullable:true})
