@@ -49,14 +49,10 @@ export default class PetController {
     ) {
         const { id } = req.params;
 
-        const { success, message } = await this.repository.atualizarPet(
+        await this.repository.atualizarPet(
             Number(id),
             req.body as PetEntity
         )
-        
-        if (!success) { 
-            return res.status(404).json({ erros: message });
-        }
 
         return res.sendStatus(204)
     }
@@ -67,13 +63,9 @@ export default class PetController {
     ) {
         const { id } = req.params;
 
-        const { success, message } = await this.repository.deletarPet(
+        await this.repository.deletarPet(
             Number(id)
         )
-
-        if (!success) { 
-            return res.status(404).json({ erros: message });
-        }
 
         return res.sendStatus(204)
     }
@@ -84,14 +76,10 @@ export default class PetController {
     ) {
         const { idPet, idAdotante } = req.params;
 
-        const { success, message } = await this.repository.adotaPet(
+        await this.repository.adotaPet(
             Number(idPet),
             Number(idAdotante)
         )
-
-        if (!success) { 
-            return res.status(404).json({ erros: message });
-        }
 
         return res.sendStatus(204)
     }

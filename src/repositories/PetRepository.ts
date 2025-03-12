@@ -25,7 +25,7 @@ export default class PetRepository implements IPetRepository {
         return await this.repository.find()
     }
 
-    async atualizarPet(id: number, pet: PetEntity): Promise<{ success: boolean; message?: string }> {
+    async atualizarPet(id: number, pet: PetEntity) {
         const petToUpdate = await this.repository.findOne({
             where: {
                 id
@@ -43,7 +43,7 @@ export default class PetRepository implements IPetRepository {
         return { success: true }
     }
 
-    async deletarPet(id: number): Promise<{ success: boolean; message?: string }> {
+    async deletarPet(id: number) {
         const petToDelete = await this.repository.findOne({
             where: {
                 id
@@ -62,7 +62,7 @@ export default class PetRepository implements IPetRepository {
     async adotaPet(
         idPet: number,
         idAdotante: number
-    ): Promise<{ success: boolean; message?: string }> {
+    ) {
         const pet = await this.repository.findOne({
             where: {
                 id: idPet

@@ -9,14 +9,14 @@ export default interface IAdotanteRepository {
     atualizaAdotante(
         id: number,
         adotante: AdotanteEntity
-    ): Promise<{ success: boolean; message?: string }> | void
+    ): void
 
     deletaAdotante(
         id: number
-    ): Promise<{ success: boolean; message?: string }> | void
+    ): void
 
     atualizaEnderecoDoAdotante(
         idAdotante: number,
         endereco: EnderecoEntity
-    ): Promise<{ success: boolean; message?: string }> | void
+    ): void
 }

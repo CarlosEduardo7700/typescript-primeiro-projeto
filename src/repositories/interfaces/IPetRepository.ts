@@ -6,14 +6,14 @@ export default interface IPetRepository {
 
     listaPet(): Promise<PetEntity[]> | Array<PetEntity>
     
-    atualizarPet(id: number, pet: PetEntity): void | Promise<{ success: boolean; messsage?: string }>
+    atualizarPet(id: number, pet: PetEntity): void
     
-    deletarPet(id: number): void | Promise<{ success: boolean; message?: string }>
+    deletarPet(id: number): void
 
     adotaPet(
         idPet: number,
         idAdotante: number
-    ): Promise<{ success: boolean; message?: string }> | void
+    ): void
 
     buscaPetPeloPorte(porte: EnumPorte): Promise<PetEntity[]> | PetEntity[]
 

@@ -6,7 +6,6 @@ type TypeRequestParamsPet = { id?: string, idPet?: string, idAdotante?: string }
 
 type TypeResponseBodyPet = {
     dados?: Pick<PetEntity, "id" | "nome" | "porte" | "especie"> | Pick<PetEntity, "id" | "nome" | "porte" | "especie">[];
-    erros?: unknown;
 }
 
 export {

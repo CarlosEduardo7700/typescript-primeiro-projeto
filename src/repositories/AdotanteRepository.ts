@@ -33,7 +33,7 @@ export default class AdotanteRepository implements IAdotanteRepository {
     async atualizaAdotante(
         id: number, 
         adotante: AdotanteEntity
-    ): Promise<{ success: boolean; message?: string; }> {
+    ) {
         const adotanteToUpdate = await this.repository.findOne({
             where: {
                 id
@@ -53,7 +53,7 @@ export default class AdotanteRepository implements IAdotanteRepository {
 
     async deletaAdotante(
         id: number
-    ): Promise<{ success: boolean; message?: string }> {
+    ) {
         const adotanteToRemove = await this.repository.findOne({ 
             where: { 
                 id 
@@ -72,7 +72,7 @@ export default class AdotanteRepository implements IAdotanteRepository {
     async atualizaEnderecoDoAdotante(
         idAdotante: number, 
         endereco: EnderecoEntity
-    ): Promise<{ success: boolean; message?: string; }> {
+    ) {
         const adotante = await this.repository.findOne({
             where: {
                 id: idAdotante
